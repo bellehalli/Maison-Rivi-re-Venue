@@ -1,9 +1,10 @@
+const supportsReveal='IntersectionObserver' in window; if(supportsReveal) document.documentElement.classList.add('js');
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
 const header=$('.header');
 const onScroll=()=>header&&header.classList.toggle('scrolled',scrollY>24); onScroll(); addEventListener('scroll',onScroll,{passive:true});
 $('.menu-btn')?.addEventListener('click',()=>header.classList.toggle('open'));
 $$('.navlinks a').forEach(a=>a.addEventListener('click',()=>header?.classList.remove('open')));
-const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12}); $$('.reveal').forEach(el=>obs.observe(el));
+if(supportsReveal){const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}}),{threshold:.12}); $$('.reveal').forEach(el=>obs.observe(el));}
 $$('.filter').forEach(btn=>btn.addEventListener('click',()=>{ $$('.filter').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const f=btn.dataset.filter; $$('.gallery figure').forEach(fig=>{fig.style.display=(f==='all'||fig.dataset.cat===f)?'block':'none'}); }));
 const b=document.querySelector('[data-builder]');
 if(b){
